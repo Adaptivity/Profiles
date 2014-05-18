@@ -1,25 +1,25 @@
 {
-	"modListVersion": 2,
-	"modList": [
+	"modinfoversion": 2,
+	"modlist": [
 		{
 			"modid": "Profiles",
 			"name": "Profiles",
 			"description": "Change client settings on the fly!",
 			"mcversion": "${mcversion}",
 			"version": "${version}",
-			"authorList": [
+			"authors": [
 				"Lunatrius"
 			],
 			"credits": "",
 			"dependants": [  ],
-			"dependencies": [ "Forge@[${minforgeversion},)", "LunatriusCore@[${coreversion},)" ],
+			"dependencies": [  ],
 			"parent": "",
-			"requiredMods": [ "Forge@[${minforgeversion},)", "LunatriusCore@[${coreversion},)" ],
+			"requiredMods": [  ],
 			"logoFile": "",
 			"screenshots": [  ],
 			"updateUrl": "http://mc.lunatri.us/",
 			"url": "http://mc.lunatri.us/",
-			"useDependencyInformation": true
+			"useDependencyInformation": "true"
 		}
 	]
 }
