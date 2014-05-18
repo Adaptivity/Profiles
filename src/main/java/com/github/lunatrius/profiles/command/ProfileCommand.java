@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatMessageComponent;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
 public class ProfileCommand extends CommandBase {
 	private final Gson gson;
@@ -69,14 +70,14 @@ public class ProfileCommand extends CommandBase {
 				this.profiles = readFile(Reference.config);
 
 				if (this.profiles.size() == 0) {
-					commandSender.addChatMessage(new ChatComponentTranslation(Strings.COMMAND_PROFILE_LIST_EMPTY));
+					commandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey(Strings.COMMAND_PROFILE_LIST_EMPTY));
 					return;
 				}
 
 				TreeSet<String> sortedProfiles = getSortedProfiles();
-				commandSender.addChatMessage(new ChatComponentTranslation(Strings.COMMAND_PROFILE_LIST_PROFILES, sortedProfiles.size()));
+				commandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationWithSubstitutions(Strings.COMMAND_PROFILE_LIST_PROFILES, sortedProfiles.size()));
 				for (String name : sortedProfiles) {
-					commandSender.addChatMessage(new ChatComponentTranslation(Strings.COMMAND_PROFILE_LIST_ENTRY, name));
+					commandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationWithSubstitutions(Strings.COMMAND_PROFILE_LIST_ENTRY, name));
 				}
 
 				return;
@@ -85,13 +86,13 @@ public class ProfileCommand extends CommandBase {
 
 				if (args.length > 1) {
 					if (!this.profiles.containsKey(args[1])) {
-						commandSender.addChatMessage(new ChatComponentTranslation(Strings.COMMAND_PROFILE_LOAD_INVALID, args[1]));
+						commandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationWithSubstitutions(Strings.COMMAND_PROFILE_LOAD_INVALID, args[1]));
 						return;
 					}
 
 					Profile.toGameSettings(this.profiles.get(args[1])).saveOptions();
 
-					commandSender.addChatMessage(new ChatComponentTranslation(Strings.COMMAND_PROFILE_LOAD_SUCCESS, args[1]));
+					commandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationWithSubstitutions(Strings.COMMAND_PROFILE_LOAD_SUCCESS, args[1]));
 					return;
 				}
 
@@ -104,7 +105,7 @@ public class ProfileCommand extends CommandBase {
 
 					saveFile(Reference.config);
 
-					commandSender.addChatMessage(new ChatComponentTranslation(Strings.COMMAND_PROFILE_SAVE_SUCCESS, args[1]));
+					commandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationWithSubstitutions(Strings.COMMAND_PROFILE_SAVE_SUCCESS, args[1]));
 					return;
 				}
 
@@ -114,13 +115,13 @@ public class ProfileCommand extends CommandBase {
 
 				if (args.length > 1) {
 					if (this.profiles.remove(args[1]) == null) {
-						commandSender.addChatMessage(new ChatComponentTranslation(Strings.COMMAND_PROFILE_DELETE_INVALID, args[1]));
+						commandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationWithSubstitutions(Strings.COMMAND_PROFILE_DELETE_INVALID, args[1]));
 						return;
 					}
 
 					saveFile(Reference.config);
 
-					commandSender.addChatMessage(new ChatComponentTranslation(Strings.COMMAND_PROFILE_DELETE_SUCCESS, args[1]));
+					commandSender.sendChatToPlayer(ChatMessageComponent.createFromTranslationWithSubstitutions(Strings.COMMAND_PROFILE_DELETE_SUCCESS, args[1]));
 					return;
 				}
 
@@ -140,7 +141,7 @@ public class ProfileCommand extends CommandBase {
 		try {
 			if (file.getParentFile() != null) {
 				if (!file.getParentFile().mkdirs()) {
-					Reference.logger.debug("Could not create directory!");
+					Reference.logger.finest("Could not create directory!");
 				}
 			}
 
@@ -162,15 +163,15 @@ public class ProfileCommand extends CommandBase {
 				return this.gson.fromJson(str, new TypeToken<HashMap<String, Profile>>() {}.getType());
 			}
 		} catch (IOException e) {
-			Reference.logger.error("IO failure!", e);
+			Reference.logger.log(Level.SEVERE, "IO failure!", e);
 		} catch (JsonSyntaxException e) {
-			Reference.logger.error(String.format("Malformed JSON in %s!", file.getName()), e);
+			Reference.logger.log(Level.SEVERE, String.format("Malformed JSON in %s!", file.getName()), e);
 		} finally {
 			if (buffer != null) {
 				try {
 					buffer.close();
 				} catch (IOException e) {
-					Reference.logger.error("IO failure!", e);
+					Reference.logger.log(Level.SEVERE, "IO failure!", e);
 				}
 			}
 		}
@@ -185,7 +186,7 @@ public class ProfileCommand extends CommandBase {
 			fileWriter = new FileWriter(file);
 			fileWriter.write(json);
 		} catch (IOException e) {
-			com.github.lunatrius.core.lib.Reference.logger.error("", e);
+			Reference.logger.log(Level.SEVERE, "", e);
 		} finally {
 			if (fileWriter != null) {
 				try {
@@ -195,5 +196,10 @@ public class ProfileCommand extends CommandBase {
 				}
 			}
 		}
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		return 0;
 	}
 }

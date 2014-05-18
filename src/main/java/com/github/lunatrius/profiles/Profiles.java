@@ -1,6 +1,5 @@
 package com.github.lunatrius.profiles;
 
-import com.github.lunatrius.core.version.VersionChecker;
 import com.github.lunatrius.profiles.command.ProfileCommand;
 import com.github.lunatrius.profiles.lib.Reference;
 import cpw.mods.fml.common.Mod;
@@ -13,8 +12,6 @@ import net.minecraftforge.client.ClientCommandHandler;
 public class Profiles {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		VersionChecker.registerMod(event.getModMetadata());
-
 		Reference.logger = event.getModLog();
 
 		Reference.config = event.getSuggestedConfigurationFile();

@@ -1,11 +1,11 @@
 package com.github.lunatrius.profiles.lib;
 
 import com.google.common.base.Throwables;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public class Reference {
 	static {
