@@ -1,21 +1,13 @@
 package com.github.lunatrius.profiles;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.EnumDifficulty;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Profile {
 	private boolean invertMouse;
 	private float mouseSensitivity;
 	private float fov;
 	private float gamma;
-	private float saturation;
 	private int renderDistance;
 	private int guiScale;
 	private int particles;
@@ -23,12 +15,10 @@ public class Profile {
 	private boolean anaglyph;
 	private boolean advancedOpengl;
 	private int maxFps;
-	private boolean fbo;
 	private int difficulty;
 	private boolean fancyGraphics;
 	private int ambientOcclusion;
 	private boolean clouds;
-	private List<String> resourcePacks;
 	private String language;
 	private int chatVisibility;
 	private boolean chatColors;
@@ -50,11 +40,8 @@ public class Profile {
 	private float chatHeightUnfocused;
 	private float chatScale;
 	private float chatWidth;
-	private boolean showInventoryAchievementHint;
-	private int mipmapLevels;
-	private int anisotropicFiltering;
-	private boolean forceUnicodeFont;
-	private Map<SoundCategory, Float> volume;
+	private float music;
+	private float sound;
 
 	public static Profile fromGameSettings(GameSettings gameSettings) {
 		Profile profile = new Profile();
@@ -63,22 +50,19 @@ public class Profile {
 		profile.mouseSensitivity = gameSettings.mouseSensitivity;
 		profile.fov = gameSettings.fovSetting;
 		profile.gamma = gameSettings.gammaSetting;
-		profile.saturation = gameSettings.saturation;
-		profile.renderDistance = gameSettings.renderDistanceChunks;
+		profile.renderDistance = gameSettings.renderDistance;
 		profile.guiScale = gameSettings.guiScale;
 		profile.particles = gameSettings.particleSetting;
 		profile.viewBobbing = gameSettings.viewBobbing;
 		profile.anaglyph = gameSettings.anaglyph;
 		profile.advancedOpengl = gameSettings.advancedOpengl;
 		profile.maxFps = gameSettings.limitFramerate;
-		profile.fbo = gameSettings.fboEnable;
-		profile.difficulty = gameSettings.difficulty.getDifficultyId();
+		profile.difficulty = gameSettings.difficulty;
 		profile.fancyGraphics = gameSettings.fancyGraphics;
 		profile.ambientOcclusion = gameSettings.ambientOcclusion;
 		profile.clouds = gameSettings.clouds;
-		profile.resourcePacks = gameSettings.resourcePacks;
 		profile.language = gameSettings.language;
-		profile.chatVisibility = gameSettings.chatVisibility.getChatVisibility();
+		profile.chatVisibility = gameSettings.chatVisibility;
 		profile.chatColors = gameSettings.chatColours;
 		profile.chatLinks = gameSettings.chatLinks;
 		profile.chatLinksPrompt = gameSettings.chatLinksPrompt;
@@ -98,14 +82,8 @@ public class Profile {
 		profile.chatHeightUnfocused = gameSettings.chatHeightUnfocused;
 		profile.chatScale = gameSettings.chatScale;
 		profile.chatWidth = gameSettings.chatWidth;
-		profile.showInventoryAchievementHint = gameSettings.showInventoryAchievementHint;
-		profile.mipmapLevels = gameSettings.mipmapLevels;
-		profile.anisotropicFiltering = gameSettings.anisotropicFiltering;
-		profile.forceUnicodeFont = gameSettings.forceUnicodeFont;
-		profile.volume = new HashMap<SoundCategory, Float>();
-		for (SoundCategory soundCategory : SoundCategory.values()) {
-			profile.volume.put(soundCategory, gameSettings.getSoundLevel(soundCategory));
-		}
+		profile.music = gameSettings.musicVolume;
+		profile.sound = gameSettings.soundVolume;
 		return profile;
 	}
 
@@ -116,24 +94,19 @@ public class Profile {
 		gameSettings.mouseSensitivity = profile.mouseSensitivity;
 		gameSettings.fovSetting = profile.fov;
 		gameSettings.gammaSetting = profile.gamma;
-		gameSettings.saturation = profile.saturation;
-		gameSettings.renderDistanceChunks = profile.renderDistance;
+		gameSettings.renderDistance = profile.renderDistance;
 		gameSettings.guiScale = profile.guiScale;
 		gameSettings.particleSetting = profile.particles;
 		gameSettings.viewBobbing = profile.viewBobbing;
 		gameSettings.anaglyph = profile.anaglyph;
 		gameSettings.advancedOpengl = profile.advancedOpengl;
 		gameSettings.limitFramerate = profile.maxFps;
-		gameSettings.fboEnable = profile.fbo;
-		gameSettings.difficulty = EnumDifficulty.getDifficultyEnum(profile.difficulty);
+		gameSettings.difficulty = profile.difficulty;
 		gameSettings.fancyGraphics = profile.fancyGraphics;
 		gameSettings.ambientOcclusion = profile.ambientOcclusion;
 		gameSettings.clouds = profile.clouds;
-		if (profile.resourcePacks != null) {
-			gameSettings.resourcePacks = profile.resourcePacks;
-		}
 		gameSettings.language = profile.language;
-		gameSettings.chatVisibility = EntityPlayer.EnumChatVisibility.getEnumChatVisibility(profile.chatVisibility);
+		gameSettings.chatVisibility = profile.chatVisibility;
 		gameSettings.chatColours = profile.chatColors;
 		gameSettings.chatLinks = profile.chatLinks;
 		gameSettings.chatLinksPrompt = profile.chatLinksPrompt;
@@ -153,15 +126,8 @@ public class Profile {
 		gameSettings.chatHeightUnfocused = profile.chatHeightUnfocused;
 		gameSettings.chatScale = profile.chatScale;
 		gameSettings.chatWidth = profile.chatWidth;
-		gameSettings.showInventoryAchievementHint = profile.showInventoryAchievementHint;
-		gameSettings.mipmapLevels = profile.mipmapLevels;
-		gameSettings.anisotropicFiltering = profile.anisotropicFiltering;
-		gameSettings.forceUnicodeFont = profile.forceUnicodeFont;
-		if (profile.volume != null) {
-			for (Map.Entry<SoundCategory, Float> entry : profile.volume.entrySet()) {
-				gameSettings.setSoundLevel(entry.getKey(), entry.getValue());
-			}
-		}
+		gameSettings.musicVolume = profile.music;
+		gameSettings.soundVolume = profile.sound;
 		return gameSettings;
 	}
 }
